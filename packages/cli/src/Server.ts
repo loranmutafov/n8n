@@ -108,6 +108,7 @@ import * as querystring from 'querystring';
 import * as Queue from '../src/Queue';
 import { OptionsWithUrl } from 'request-promise-native';
 import { Registry } from 'prom-client';
+import { ITagDb } from './Interfaces';
 
 class App {
 
@@ -709,6 +710,22 @@ class App {
 			};
 		}));
 
+
+		// Retrieves all tags
+		this.app.get(`/${this.restEndpoint}/tags`, ResponseHelper.send(async (req: express.Request, res: express.Response): Promise<ITagDb[]> => {
+
+			const findQuery = {} as FindManyOptions;
+			if (req.query.filter) {
+				findQuery.where = JSON.parse(req.query.filter as string);
+			}
+
+			findQuery.select = ['id', 'name', 'createdAt', 'updatedAt'];
+
+			const results = await Db.collections.Tag?.find(findQuery);
+
+			return results ?? [];
+
+		}));
 
 		// Returns parameter values which normally get loaded from an external API or
 		// get generated dynamically
