@@ -317,6 +317,8 @@ export class SendGrid implements INodeType {
 
 					const {
 						bccEmail,
+						replyToEmail,
+						replyToName,
 						ccEmail,
 						enableSandbox,
 						sendAt,
@@ -326,6 +328,8 @@ export class SendGrid implements INodeType {
 						ipPoolName,
 					} = this.getNodeParameter('additionalFields', i) as {
 						bccEmail: string;
+						replyToEmail: string;
+						replyToName: string;
 						ccEmail: string;
 						enableSandbox: boolean,
 						sendAt: string;
@@ -401,6 +405,13 @@ export class SendGrid implements INodeType {
 
 					if (bccEmail) {
 						body.personalizations[0].bcc = bccEmail.split(',').map(i => ({ email: i.trim() }));
+					}
+
+					if (replyToEmail) {
+						body.reply_to = {
+							email: (this.getNodeParameter('replyToEmail', i) as string).trim(),
+							name: this.getNodeParameter('replyToName', i) as string,
+						};
 					}
 
 					if (ccEmail) {
