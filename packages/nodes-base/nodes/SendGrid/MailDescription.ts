@@ -275,6 +275,20 @@ export const mailFields = [
 				description: 'Comma-separated list of emails of the recipients<br>of a blind carbon copy of the email.',
 			},
 			{
+				displayName: 'Reply-to Email',
+				name: 'replyToEmail',
+				type: 'string',
+				default: '',
+				description: 'Email address to reply to by default.',
+			},
+			{
+				displayName: 'Reply-to Name',
+				name: 'replyToName',
+				type: 'string',
+				default: '',
+				description: 'Name of the person to reply to by default.',
+			},
+			{
 				displayName: 'Categories',
 				name: 'categories',
 				type: 'string',
@@ -356,6 +370,7 @@ export type SendMailBody = {
 	}>,
 	ip_pool_name?: string;
 	from: EmailName,
+	reply_to?: EmailName,
 	template_id?: string,
 	content?: Array<{
 		type: string,
