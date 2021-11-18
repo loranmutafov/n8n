@@ -268,7 +268,7 @@ export class SendGrid implements INodeType {
 				} catch (error) {
 					if (this.continueOnFail()) {
 						returnData.push({ error: error.message });
-					} else {	
+					} else {
 						throw error;
 					}
 				}
@@ -390,6 +390,8 @@ export class SendGrid implements INodeType {
 
 						const {
 							bccEmail,
+							replyToEmail,
+							replyToName,
 							ccEmail,
 							enableSandbox,
 							sendAt,
@@ -399,6 +401,8 @@ export class SendGrid implements INodeType {
 							ipPoolName,
 						} = this.getNodeParameter('additionalFields', i) as {
 							bccEmail: string;
+							replyToEmail: string;
+							replyToName: string;
 							ccEmail: string;
 							enableSandbox: boolean,
 							sendAt: string;
@@ -470,6 +474,16 @@ export class SendGrid implements INodeType {
 							if (attachmentsToSend.length) {
 								body.attachments = attachmentsToSend;
 							}
+						}
+
+						if (replyToEmail) {
+							body.reply_to = {
+								email: replyToEmail.trim(),
+							};
+
+							if (replyToName) {
+								body.reply_to.name = replyToName.trim();
+							};
 						}
 
 						if (bccEmail) {
