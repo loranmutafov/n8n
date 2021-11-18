@@ -36,6 +36,11 @@ export const messageOperations = [
 				description: 'Get MIME content of a message',
 			},
 			{
+				name: 'Move',
+				value: 'move',
+				description: 'Move a message',
+			},
+			{
 				name: 'Reply',
 				value: 'reply',
 				description: 'Create reply to a message',
@@ -75,6 +80,7 @@ export const messageFields = [
 					'get',
 					'getAttachment',
 					'getMime',
+					'move',
 					'update',
 					'reply',
 				],
@@ -595,7 +601,7 @@ export const messageFields = [
 	{
 		displayName: 'Binary Property',
 		name: 'binaryPropertyName',
-		description: 'Name of the binary property to which to<br />write the data of the read file.',
+		description: 'Name of the binary property to which to write the data of the read file.',
 		type: 'string',
 		required: true,
 		default: 'data',
@@ -615,7 +621,7 @@ export const messageFields = [
 	{
 		displayName: 'Folder ID',
 		name: 'folderId',
-		description: 'Folder ID',
+		description: 'Target Folder ID.',
 		type: 'string',
 		default: '',
 		required: true,

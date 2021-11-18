@@ -7,6 +7,9 @@ import {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
+	JsonObject,
+	NodeApiError,
+	NodeOperationError,
 } from 'n8n-workflow';
 
 import {
@@ -329,11 +332,11 @@ export class RabbitMQ implements INodeType {
 				// @ts-ignore
 				const promisesResponses = await Promise.allSettled(queuePromises);
 
-				promisesResponses.forEach((response: IDataObject) => {
+				promisesResponses.forEach((response: JsonObject) => {
 					if (response!.status !== 'fulfilled') {
 
 						if (this.continueOnFail() !== true) {
-							throw new Error(response!.reason as string);
+							throw new NodeApiError(this.getNode(), response);
 						} else {
 							// Return the actual reason as error
 							returnItems.push(
@@ -355,6 +358,7 @@ export class RabbitMQ implements INodeType {
 				});
 
 				await channel.close();
+				await channel.connection.close();
 			}
 			else if (mode === 'exchange') {
 				const exchange = this.getNodeParameter('exchange', 0) as string;
@@ -393,11 +397,11 @@ export class RabbitMQ implements INodeType {
 				// @ts-ignore
 				const promisesResponses = await Promise.allSettled(exchangePromises);
 
-				promisesResponses.forEach((response: IDataObject) => {
+				promisesResponses.forEach((response: JsonObject) => {
 					if (response!.status !== 'fulfilled') {
 
 						if (this.continueOnFail() !== true) {
-							throw new Error(response!.reason as string);
+							throw new NodeApiError(this.getNode(), response);
 						} else {
 							// Return the actual reason as error
 							returnItems.push(
@@ -419,8 +423,9 @@ export class RabbitMQ implements INodeType {
 				});
 
 				await channel.close();
+				await channel.connection.close();
 			} else {
-				throw new Error(`The operation "${mode}" is not known!`);
+				throw new NodeOperationError(this.getNode(), `The operation "${mode}" is not known!`);
 			}
 
 			return this.prepareOutputData(returnItems);
@@ -428,6 +433,7 @@ export class RabbitMQ implements INodeType {
 		catch (error) {
 			if (channel) {
 				await channel.close();
+				await channel.connection.close();
 			}
 			throw error;
 		}
