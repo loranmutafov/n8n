@@ -250,8 +250,16 @@ export class SendGrid implements INodeType {
 							}
 						}
 						if (additionalFields.listIdsUi) {
+							//@ts-ignore
+							console.log("additionalFields.listIdsUi", additionalFields.listIdsUi);
 							const listIdValues = (additionalFields.listIdsUi as IDataObject).listIdValues as IDataObject;
+
+							//@ts-ignore
+							console.log("listIdValues", listIdValues);
 							const listIds = listIdValues.listIds as IDataObject[];
+
+							//@ts-ignore
+							console.log("listIds", listIds);
 							lists = listIds;
 						}
 						if (additionalFields.customFieldsUi) {
