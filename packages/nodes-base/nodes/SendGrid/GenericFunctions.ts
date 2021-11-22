@@ -39,6 +39,8 @@ export async function sendGridApiRequest(this: IHookFunctions | IExecuteFunction
 
 	try {
 		//@ts-ignore
+		console.log('SendGrid req options', options);
+		//@ts-ignore
 		return await this.helpers.request!(options);
 	} catch (error) {
 		throw new NodeApiError(this.getNode(), error);
